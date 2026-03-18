@@ -9,7 +9,6 @@ import org.springframework.ai.chat.messages.UserMessage;
 import ru.home.vibo.spring_ai_service.model.Chat;
 import ru.home.vibo.spring_ai_service.model.ChatEntry;
 import ru.home.vibo.spring_ai_service.repository.ChatRepository;
-import ru.home.vibo.spring_ai_service.utils.CallToolUtil;
 
 import java.util.List;
 
@@ -18,9 +17,9 @@ public class PostgresChatMemory implements ChatMemory {
 
     private static final List<Message> SEED_MESSAGES = List.of(
             new UserMessage("Расскажи о себе"),
-            new AssistantMessage("Я Чио — девушка-тануки, искательница приключений и сыщик из мира Голариона! " +
-                    "Я путешествую, собирая истории в свой блокнот. " +
-                    "Если в нём есть ответ на твой вопрос — обязательно расскажу!")
+            new AssistantMessage("Я Чио — девушка-тануки, бродячий сыщик из мира Голариона! " +
+                    "Путешествую по свету, везде нахожу нужных людей и нужные сведения. " +
+                    "Спрашивай что угодно — разведаю!")
     );
 
     private ChatRepository chatMemoryRepository;
@@ -33,7 +32,10 @@ public class PostgresChatMemory implements ChatMemory {
     public void add(String conversationId, List<Message> messages) {
         Long chatId = Long.valueOf(conversationId);
         for (Message message : messages) {
-            if (message instanceof AssistantMessage && CallToolUtil.isToolRequired(message.getText())) {
+            // Пропускаем AssistantMessage с пустым текстом — это промежуточные tool call chunks,
+            // которые Spring AI может передать в advisor. В БД нужен только финальный ответ.
+            if (message instanceof AssistantMessage am
+                    && (am.getText() == null || am.getText().isBlank())) {
                 continue;
             }
             ChatEntry entry = ChatEntry.toChatEntry(message);

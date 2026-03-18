@@ -1,6 +1,6 @@
 package ru.home.vibo.spring_ai_service.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +11,10 @@ import ru.home.vibo.spring_ai_service.model.Chat;
 import ru.home.vibo.spring_ai_service.service.ChatService;
 
 @Controller
+@RequiredArgsConstructor
 public class ChatController {
 
-    @Autowired
-    private ChatService chatService;
+    private final ChatService chatService;
 
     @GetMapping
     public String mainPage(ModelMap model) {
@@ -25,7 +25,7 @@ public class ChatController {
     @GetMapping("/chat/{chatId}")
     public String showChat(ModelMap model, @PathVariable("chatId") Long chatId) {
         model.addAttribute("chats", chatService.getAllChats());
-        model.addAttribute("chat", chatService.getChat(chatId));
+        model.addAttribute("chat", chatService.getChatWithHistory(chatId));
         return "chat";
     }
 

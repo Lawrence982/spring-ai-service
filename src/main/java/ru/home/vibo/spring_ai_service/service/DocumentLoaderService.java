@@ -5,7 +5,6 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
@@ -29,17 +28,20 @@ public class DocumentLoaderService implements CommandLineRunner {
             .withChunkSize(200)
             .build();
 
-    @Value("${app.knowledgebase.path}")
-    private String knowledgeBasePath;
+    private final String knowledgeBasePath;
+    private final DocumentRepository documentRepository;
+    private final ResourcePatternResolver resolver;
+    private final VectorStore vectorStore;
 
-    @Autowired
-    private DocumentRepository documentRepository;
-
-    @Autowired
-    private ResourcePatternResolver resolver;
-
-    @Autowired
-    private VectorStore vectorStore;
+    public DocumentLoaderService(@Value("${app.knowledgebase.path}") String knowledgeBasePath,
+                                  DocumentRepository documentRepository,
+                                  ResourcePatternResolver resolver,
+                                  VectorStore vectorStore) {
+        this.knowledgeBasePath = knowledgeBasePath;
+        this.documentRepository = documentRepository;
+        this.resolver = resolver;
+        this.vectorStore = vectorStore;
+    }
 
     public void loadDocuments() {
         log.info("Starting document loading from {}", knowledgeBasePath);

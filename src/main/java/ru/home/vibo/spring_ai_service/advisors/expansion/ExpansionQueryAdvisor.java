@@ -62,7 +62,7 @@ public class ExpansionQueryAdvisor implements BaseAdvisor {
     public ChatClientRequest before(ChatClientRequest chatClientRequest, AdvisorChain advisorChain) {
 
         String userQuestion = chatClientRequest.prompt().getUserMessage().getText();
-        if (userQuestion.isBlank()) {
+        if (userQuestion == null || userQuestion.isBlank()) {
             return chatClientRequest;
         }
 
