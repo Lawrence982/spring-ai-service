@@ -1,0 +1,18 @@
+spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+    mcp:
+      client:
+        enabled: false
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+app:
+  knowledgebase:
+    path: classpath:/test-knowledgebase/*.txt
+  llm:
+    persona-prompt: "Test persona"

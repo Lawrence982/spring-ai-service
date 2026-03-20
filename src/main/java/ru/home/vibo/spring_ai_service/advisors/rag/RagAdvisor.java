@@ -110,7 +110,7 @@ public class RagAdvisor implements BaseAdvisor {
      * Ollama/Gemma3 требует SystemMessage первым — иначе модель не применяет
      * системные правила к RAG-контексту и отвечает «ничего нет в блокноте».
      */
-    private Prompt buildPromptWithSystemFirst(Prompt prompt, String newUserText) {
+    Prompt buildPromptWithSystemFirst(Prompt prompt, String newUserText) {
         List<Message> all = prompt.getInstructions();
 
         // Индекс последнего UserMessage — его заменяем на новый

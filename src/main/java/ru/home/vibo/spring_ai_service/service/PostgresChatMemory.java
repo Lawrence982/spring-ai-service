@@ -60,6 +60,6 @@ public class PostgresChatMemory implements ChatMemory {
 
     @Override
     public void clear(String conversationId) {
-        // not implemented
+        throw new UnsupportedOperationException("PostgresChatMemory.clear() is not implemented");
     }
 }
